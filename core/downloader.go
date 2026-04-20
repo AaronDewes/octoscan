@@ -235,7 +235,7 @@ func (gh *GitHub) DownloadRepo(repository *github.Repository) error {
 	if gh.defaultBranchOnly {
 		ref, _, err := gh.client.Git.GetRef(gh.ctx, gh.org, repository.GetName(), "refs/heads/"+*repository.DefaultBranch)
 		if err != nil {
-			common.Log.Error(fmt.Sprintf("Fail to get default branche of repository %s: %v", repository.GetName(), err))
+			common.Log.Error(fmt.Sprintf("Fail to get default branch of repository %s: %v", repository.GetName(), err))
 
 			return err
 		}
