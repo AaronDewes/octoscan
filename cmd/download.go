@@ -12,7 +12,7 @@ import (
 var usageDownload = `Octoscan.
 
 Usage:
-	octoscan dl [options] --org <org> [--repo <repo> --token <pat> --default-branch --max-branches <num> --path <path> --output-dir <dir> --include-archives]
+	octoscan dl [options] --org <org> [--repo <repo> --token <pat> --all-branches --max-branches <num> --path <path> --output-dir <dir> --include-archives]
 
 Options:
 	-h, --help  						Show help
@@ -21,7 +21,7 @@ Options:
 	--org <org>  						Organizations to target
 	--repo <repo>  						Repository to target
 	--token <pat>  						GHP to authenticate to GitHub
-	--default-branch  					Only download workflows from the default branch
+	--all-branches  					Download workflows from all branches
 	--max-branches <num>  					Limit the number of branches to download
 	--path <path>  						GitHub file path to download [default: .github/workflows]
 	--output-dir <dir>  					Output dir where to download files [default: octoscan-output]
@@ -48,7 +48,7 @@ func runDownloader(args docopt.Opts) error {
 		Repo:              repo,
 		OutputDir:         dir,
 		Token:             token,
-		DefaultBranchOnly: args["--default-branch"].(bool),
+		DefaultBranchOnly: !args["--all-branches"].(bool),
 		MaxBranches:       maxBranches,
 		IncludeArchives:   args["--include-archives"].(bool),
 		IncludeForks:      !args["--exclude-forks"].(bool),
