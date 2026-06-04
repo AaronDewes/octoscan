@@ -56,7 +56,7 @@ func (rule *RuleCache) VisitStep(n *actionlint.Step) error {
 	if strings.HasPrefix(spec, "actions/cache") && rule.dangerousCheckoutBefore {
 
 		rule.Errorf(
-			e.Inputs["path"].Value.Pos,
+			e.Uses.Pos,
 			"Use of action 'actions/cache' with potentially untrusted input",
 		)
 	}
