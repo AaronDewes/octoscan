@@ -71,7 +71,7 @@ var knownOrgs = []string{
 
 type RuleRepoJacking struct {
 	actionlint.RuleBase
-	allActions map[string][]map[string]*actionlint.Pos
+	allRepos map[string][]map[string]*actionlint.Pos
 }
 
 // NewRuleRepoJacking creates new RuleRepoJacking instance.
@@ -79,9 +79,9 @@ func NewRuleRepoJacking() *RuleRepoJacking {
 	return &RuleRepoJacking{
 		RuleBase: actionlint.NewRuleBase(
 			"repo-jacking",
-			"Verify that external actions are pointing to a valid GitHub user or organization.",
+			"Verify that external actions and checkouts are pointing to a valid GitHub user or organization.",
 		),
-		allActions: make(map[string][]map[string]*actionlint.Pos),
+		allRepos: make(map[string][]map[string]*actionlint.Pos),
 	}
 }
 
@@ -94,13 +94,22 @@ func (rule *RuleRepoJacking) VisitStep(n *actionlint.Step) error {
 
 	spec := e.Uses.Value
 
+	if strings.HasPrefix(spec, "actions/checkout") && e.Inputs["repository"] != nil && common.GitHubRepoRegexp.MatchString(e.Inputs["repository"].Value.Value) {
+		repo := e.Inputs["repository"].Value.Value
+		idx := strings.IndexRune(repo, '/')
+		owner := repo[:idx]
+
+		rule.allRepos[owner] = append(rule.allRepos[owner], map[string]*actionlint.Pos{repo: e.Inputs["repository"].Value.Pos})
+		return nil
+	}
+
 	// Parse {owner}/{repo}@{ref} or {owner}/{repo}/{path}@{ref}
 	idx := strings.IndexRune(spec, '/')
 
 	if idx != -1 && !strings.HasPrefix(spec, "./") && !strings.HasPrefix(spec, "docker://") {
 		owner := spec[:idx]
 
-		rule.allActions[owner] = append(rule.allActions[owner], map[string]*actionlint.Pos{spec: e.Uses.Pos})
+		rule.allRepos[owner] = append(rule.allRepos[owner], map[string]*actionlint.Pos{spec: e.Uses.Pos})
 	}
 
 	return nil
@@ -108,7 +117,7 @@ func (rule *RuleRepoJacking) VisitStep(n *actionlint.Step) error {
 
 // VisitWorkflowPost is callback when visiting Workflow node after visiting its children
 func (rule *RuleRepoJacking) VisitWorkflowPost(n *actionlint.Workflow) error {
-	for key, value := range rule.allActions {
+	for key, value := range rule.allRepos {
 		// don't fetch known org to prevent multiple access to the API
 		if isKnownOrg(key) {
 			continue

@@ -25,6 +25,8 @@ var GitHubOutputBashRegexp = regexp.MustCompile(`(?m)>>\s*"*\${*GITHUB_OUTPUT`)
 var GitHubEnvPwshRegexp = regexp.MustCompile(`(?m)(?i:env):GITHUB_ENV`)
 var GitHubEnvBashRexexp = regexp.MustCompile(`(?m)>{1,2}\s*"*\${*GITHUB_ENV`)
 var BotActor = regexp.MustCompile(`(?m)github.(triggering_)?actor\s*?(=|!)=\s*?["'].*?\[bot\]`)
+// <org>/<repo>
+var GitHubRepoRegexp = regexp.MustCompile(`(?m)^[a-zA-Z0-9-]+/[a-zA-Z0-9-]+$`)
 
 // GitCheckoutBashRexexp It’s not possible to include a backtick in a raw string literal (https://yourbasic.org/golang/multiline-string/)
 var GitCheckoutBashRexexp = regexp.MustCompile(`(?m)git checkout.*(\$|` + regexp.QuoteMeta("`") + `)`)
