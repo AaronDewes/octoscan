@@ -64,6 +64,9 @@ var knownOrgs = []string{
 	"Swatinem",
 	"treosh",
 	"wearerequired",
+
+	// Apparently, GitHub reserved this name to prevent it from being taken over for repo jacking
+	"StyraInc",
 }
 
 type RuleRepoJacking struct {
