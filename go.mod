@@ -5,7 +5,7 @@ go 1.25.0
 // well I have a PR that is not merged: https://github.com/rhysd/actionlint/pull/332
 // and I can"t use go install with replace directive: https://github.com/golang/go/issues/44840
 // do you have any idea ?
-replace github.com/rhysd/actionlint => github.com/AaronDewes/actionlint v0.0.0-20260611085532-a3b3456d02ae
+replace github.com/rhysd/actionlint => github.com/AaronDewes/actionlint v0.0.0-20260611132235-7a7924db2e01
 
 require (
 	github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815
