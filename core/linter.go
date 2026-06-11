@@ -41,7 +41,6 @@ var (
 		"debug-artefacts":        true,
 		"debug-js-exec":          true,
 		"debug-oidc-action":      true,
-		"dangerous-cache":        true,
 	}
 )
 
@@ -136,10 +135,6 @@ func offlineRules() []actionlint.Rule {
 		// run on every trigger even if specified by the user because this vulnerability
 		// can be triggered in every workflow
 		res = append(res, rules.NewRuleRuleDangerousArtefact(common.AllTriggers))
-	}
-
-	if RulesSwitch["dangerous-cache"] {
-		res = append(res, rules.NewRuleCache(common.TriggerWithExternalData))
 	}
 
 	if DebugRules {
